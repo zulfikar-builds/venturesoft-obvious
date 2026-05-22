@@ -8,25 +8,48 @@ Before editing, suggest the smallest relevant set of `.obvious` files for the ta
 
 ## Codebase Map
 
-This is a minimal repository. No application source directories exist at this time.
+Python-based project. No application source directories exist yet — they will be added as the codebase grows.
 
 | Path | Purpose |
 |---|---|
 | `README.md` | Project overview — `# venturesoft-obvious` |
 | `.obvious/` | Autobuild repo contract (this directory) |
+| `.obvious/review/overlay.md` | Python-specific code review quality gates |
+| `.github/workflows/ci.yml` | GitHub Actions CI pipeline (lint, format, typecheck, test) |
 
 ## Repo Guidance for Autobuild
 
-<!-- synthesized from: README.md (only file present at install time) -->
+<!-- synthesized from: README.md + Python toolchain configured 2026-05-22 -->
 
 - **Repo:** `zulfikar-builds/venturesoft-obvious`
-- **Description:** Minimal bootstrap repo — a single README with `# venturesoft-obvious`. No runtime, no package manager, no services, no CI workflows.
+- **Description:** Python project. CI, linting, type checking, and test infrastructure are configured. Source code directories will be added as the project grows.
 - **Default base branch:** `main`
 - **Merge method:** squash
-- **No test commands** — no test framework present at install time.
-- **No lint/typecheck** — no toolchain present at install time.
-- **No build process** — static content only.
-- As this repo grows, update this guidance section to reflect new conventions.
+- **Language:** Python 3.11+
+
+### CI Commands
+
+| Command | Purpose |
+|---|---|
+| `ruff check .` | Lint — fast Python linter (replaces flake8/isort/pycodestyle) |
+| `ruff format --check .` | Format check — verify code is formatted consistently |
+| `mypy . --strict --ignore-missing-imports` | Type check — strict mypy, no implicit `Any` |
+| `pytest --cov --cov-report=term-missing` | Run tests with coverage report |
+
+### Toolchain
+
+- **Linter:** `ruff` — configure via `ruff.toml` or `[tool.ruff]` in `pyproject.toml`
+- **Type checker:** `mypy` in strict mode — configure via `mypy.ini` or `[tool.mypy]` in `pyproject.toml`
+- **Test runner:** `pytest` with `pytest-cov` for coverage
+- **Dependencies:** declare in `requirements.txt` or `pyproject.toml`; CI installs whichever exists
+
+### Conventions
+
+- All functions must have type annotations (parameters and return type)
+- Public APIs require docstrings
+- Tests live in `tests/` (or colocated `test_*.py` files); use `pytest` style, not `unittest`
+- CI runs on every PR to `main` and every push to `main`
+- As source directories are added, update the Codebase Map above and this guidance section
 
 ## Sandbox Snapshot
 
