@@ -38,7 +38,13 @@ jobs:
         run: ruff format --check .
 
       - name: Type check (mypy strict)
-        run: mypy . --strict --ignore-missing-imports
+        run: |
+          # Skip gracefully when no Python source files exist yet
+          if find . -name '*.py' -not -path './.git/*' | grep -q .; then
+            mypy . --strict --ignore-missing-imports
+          else
+            echo "No .py files found — skipping mypy. Add source files as the codebase grows."
+          fi
 
       - name: Tests (pytest with coverage)
         run: |
